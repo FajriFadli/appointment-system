@@ -1,73 +1,187 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Appointment Scheduling System
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project is an Appointment Scheduling System built with NestJS, designed to manage appointments efficiently. It provides features for booking, canceling, and viewing available appointment slots, along with configurable system settings.
 
-## Description
+## Table of Contents
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Appointment Scheduling System](#appointment-scheduling-system)
+  - [Overview](#overview)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Technology Choices](#technology-choices)
+    - [PostgreSQL and Supabase](#postgresql-and-supabase)
+      - [PostgreSQL](#postgresql)
+      - [Supabase](#supabase)
+  - [System Design](#system-design)
+    - [Architecture](#architecture)
+    - [Key Components](#key-components)
+    - [Data Flow](#data-flow)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [API Endpoints](#api-endpoints)
+  - [Database Schema](#database-schema)
+    - [Appointment Table](#appointment-table)
+    - [Config Table](#config-table)
+  - [Deployment](#deployment)
+  - [Areas for Improvement](#areas-for-improvement)
+
+## Features
+
+- Book appointments
+- Cancel appointments
+- View available appointment slots
+- Configurable operational hours and days
+- Configurable appointment slot duration
+- Integration with Supabase for PostgreSQL database
+
+## Technology Choices
+
+### PostgreSQL and Supabase
+
+This project uses PostgreSQL as the database, hosted on Supabase. Here's why these technologies were chosen:
+
+#### PostgreSQL
+
+1. **Robust and Reliable**: PostgreSQL is known for its reliability, data integrity, and correctness. It's an excellent choice for applications that require data consistency and ACID compliance.
+
+2. **Advanced Features**: PostgreSQL offers advanced features like full-text search, complex queries, and JSON support, which can be beneficial as the application grows.
+
+3. **Scalability**: It can handle large amounts of data and complex queries efficiently, making it suitable for applications that may need to scale in the future.
+
+4. **Open Source**: Being open-source, PostgreSQL has a large community, extensive documentation, and regular updates.
+
+5. **Time and Date Handling**: PostgreSQL has excellent support for date and time operations, which is crucial for an appointment scheduling system.
+
+#### Supabase
+
+1. **Simplified Database Management**: Supabase provides a user-friendly interface for managing PostgreSQL databases, making it easier to set up, monitor, and maintain the database.
+
+2. **Built-in API**: Supabase automatically generates RESTful APIs for your database, which can speed up development and provide additional flexibility.
+
+3. **Real-time Capabilities**: Supabase offers real-time subscriptions, which could be useful for future features like live updates of appointment availability.
+
+4. **Authentication and Authorization**: While not utilized in the current version, Supabase provides built-in auth features that could be valuable for future enhancements.
+
+5. **Scalability**: Supabase is built on top of AWS, ensuring good performance and the ability to scale as the application grows.
+
+6. **Cost-Effective**: Supabase offers a generous free tier and reasonable pricing for growing applications, making it cost-effective for projects of various sizes.
+
+7. **Seamless Integration**: Supabase integrates well with modern web technologies and frameworks, including NestJS.
+
+By using PostgreSQL with Supabase, this project benefits from a powerful, scalable database system with the added advantages of simplified management, automatic API generation, and potential for easy feature expansion in the future. This combination provides a solid foundation for building a robust and scalable appointment scheduling system.
+
+
+## System Design
+
+Below is a high-level diagram of the Appointment Scheduling System architecture:
+
+![Appointment System Diagram](AppointmentSystemDiagram.png "Appointment System Diagram")
+
+This diagram illustrates the flow of data from the client through the various layers of the NestJS application, ultimately interacting with the PostgreSQL database hosted on Supabase.
+
+
+### Architecture
+
+The system follows a modular architecture using NestJS:
+
+- `AppointmentsModule`: Handles appointment-related operations
+- `ConfigModule`: Manages system configuration
+
+### Key Components
+
+1. **AppointmentsController**: Exposes API endpoints for appointment operations
+2. **AppointmentsService**: Implements business logic for appointments
+3. **ConfigController**: Exposes API endpoints for system configuration
+4. **ConfigService**: Manages system configuration
+5. **Appointment Entity**: Represents the appointment data structure
+6. **Config Entity**: Represents the system configuration data structure
+
+### Data Flow
+
+1. Client sends a request to book an appointment
+2. AppointmentsController receives the request
+3. AppointmentsService validates the request against current configuration
+4. If valid, AppointmentsService creates a new appointment in the database
+5. Response is sent back to the client
 
 ## Installation
 
-```bash
-$ npm install
-```
+1. Clone the repository
+2. Install dependencies by running `npm install`
+3. Set up environment variables:
+Create a `.env` file in the root directory and add: `DATABASE_URL=your_supabase_connection_string`
+4. Run the application: `npm run start:dev`
 
-## Running the app
 
-```bash
-# development
-$ npm run start
+## Configuration
 
-# watch mode
-$ npm run start:dev
+System configuration can be managed through the `/config` endpoint. Configurable parameters include:
 
-# production mode
-$ npm run start:prod
-```
+- Slot duration (minimum 5 minutes)
+- Operational start time
+- Operational end time
+- Operational days
 
-## Test
+## API Endpoints
 
-```bash
-# unit tests
-$ npm run test
+- `GET /appointments/available-slots`: Get available appointment slots
+- `POST /appointments/book`: Book an appointment
+- `DELETE /appointments/:id`: Cancel an appointment
+- `GET /config`: Get current system configuration
+- `PUT /config`: Update system configuration
 
-# e2e tests
-$ npm run test:e2e
+## Database Schema
 
-# test coverage
-$ npm run test:cov
-```
+### Appointment Table
+- id: number (Primary Key)
+- date: string
+- time: string
+- slots: number
 
-## Support
+### Config Table
+- id: number (Primary Key)
+- slotDuration: number
+- maxSlotsPerAppointment: number
+- operationalStartTime: string
+- operationalEndTime: string
+- operationalDays: number[]
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
+## Deployment
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. Build the application: `npm run build`
+2. Set up your production environment variables
+3. Start the production server: npm run start:prod
 
-## License
+## Areas for Improvement
 
-Nest is [MIT licensed](LICENSE).
+While the current implementation provides a solid foundation for an appointment scheduling system, there are several areas where it could be enhanced:
+
+1. **User Authentication**: Implement user authentication to allow different types of users (e.g., administrators, staff, clients) with varying levels of access.
+
+2. **Multiple Service Types**: Add support for different types of appointments or services, each with its own duration and availability.
+
+3. **Recurring Appointments**: Implement functionality for scheduling recurring appointments (e.g., weekly, monthly).
+
+4. **Notifications**: Integrate an email or SMS notification system for appointment reminders and updates.
+
+5. **Timezone Support**: Add support for multiple timezones to cater to a global user base.
+
+6. **Waiting List**: Implement a waiting list feature for fully booked time slots.
+
+7. **Calendar Integration**: Allow integration with popular calendar services (Google Calendar, iCal, etc.).
+
+8. **Reporting and Analytics**: Add features for generating reports and analyzing appointment data.
+
+9. **Frontend Application**: Develop a user-friendly frontend application to interact with the API.
+
+10. **Performance Optimization**: Implement caching strategies and optimize database queries for improved performance as the system scales.
+
+11. **Localization**: Add support for multiple languages to make the system accessible to a wider audience.
+
+12. **Automated Testing**: Expand the test suite with more unit tests and integration tests to ensure system reliability.
+
+These improvements would enhance the functionality, usability, and scalability of the appointment scheduling system, making it more robust and feature-rich for various use cases.
+
